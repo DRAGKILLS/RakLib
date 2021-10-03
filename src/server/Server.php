@@ -107,7 +107,10 @@ class Server implements ServerInterface{
 	/** @var ExceptionTraceCleaner */
 	private $traceCleaner;
 
+	public static $instance = null;
+
 	public function __construct(int $serverId, \Logger $logger, Socket $socket, int $maxMtuSize, ProtocolAcceptor $protocolAcceptor, ServerEventSource $eventSource, ServerEventListener $eventListener, ExceptionTraceCleaner $traceCleaner){
+		self:instance = $this;
 		$this->serverId = $serverId;
 		$this->logger = $logger;
 		$this->socket = $socket;
@@ -119,6 +122,10 @@ class Server implements ServerInterface{
 		$this->startTimeMS = (int) (microtime(true) * 1000);
 
 		$this->unconnectedMessageHandler = new UnconnectedMessageHandler($this, $protocolAcceptor);
+	}
+
+	public static function getInstance(): self{
+		return self::$instance;
 	}
 
 	/**
